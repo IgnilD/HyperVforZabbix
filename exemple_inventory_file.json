@@ -1,0 +1,51 @@
+{
+    "device_type":  {
+                        "manufacturer":  "Dell Inc.",
+                        "model":  "PowerEdge R740"
+                    },
+    "cluster":  {
+                    "name":  "node03",
+                    "type":  "Hyper-V"
+                },
+    "devices":  [
+                    {
+                        "VMs":  [
+                                    {
+                                        "vm_storage_total":  800,
+                                        "vm_id":  "absolute-id-01",
+                                        "vm_uptime":  0,
+                                        "vm_IPs":  "",
+                                        "replication_state":  "Disabled",
+                                        "is_clustered":  false,
+                                        "vm_memory":  0,
+                                        "vm_cpu":  4,
+                                        "vm_name":  "TEST151_off",
+					                              "node_name":  "host03node01"
+                                        "vm_state":  "Off"
+                                    },
+                                    {
+                                        "vm_storage_total":  2800,
+                                        "vm_id":  "absolute-id-02",
+                                        "vm_uptime":  1705.44,
+                                        "vm_IPs":  "10.18.18.107",
+                                        "replication_state":  "Disabled",
+                                        "is_clustered":  true,
+                                        "vm_memory":  15,
+                                        "vm_cpu":  4,
+                                        "vm_name":  "TEST07",
+					                              "node_name":  "host03node01"
+                                        "vm_state":  "Running"
+                                    }
+                                ],
+                        "cluster":  "node03",
+                        "serial":  "******",
+                        "site":  "Hyperv-test",
+                        "custom_fields":  {
+                                              "CPU_Cores":  66,
+                                              "Memory":  "666.66 GB",
+                                              "CPU_Model":  "Intel(R) Xeon(R) CPU E5-2697 v4 @ 2.50GHz"
+                                          },
+                        "node_status":  "Up"
+                    }
+                ]
+}
