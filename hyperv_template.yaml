@@ -8,8 +8,8 @@ zabbix_export:
       name: 'HyperV VM'
   templates:
     - uuid: 3f27a21dfe4141caae024ff63c4bfb39
-      template: 'Template Windows HyperV Host - test'
-      name: 'Template Windows HyperV Host - test'
+      template: 'Template Windows HyperV Hypervisor'
+      name: 'Template Windows HyperV Hypervisor'
       groups:
         - name: Templates
       items:
@@ -112,7 +112,7 @@ zabbix_export:
               value: Hyper-V
           triggers:
             - uuid: f5805dcb58774a44bd217daf4305140b
-              expression: 'avg(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Hypervisor Logical Processor(_Total)\% Idle Time],#3)<10'
+              expression: 'avg(/Template Windows HyperV Hypervisor/perf_counter_en[\Hyper-V Hypervisor Logical Processor(_Total)\% Idle Time],#3)<10'
               name: 'HyperV Host Idle CPU < 10%'
               priority: WARNING
         - uuid: 3bc784b044c049738b602c4e926272a4
@@ -273,7 +273,7 @@ zabbix_export:
               value: Hyper-V
           triggers:
             - uuid: fcc56d27b98b46d08a7b08252bbadc48
-              expression: 'last(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Critical])>0'
+              expression: 'last(/Template Windows HyperV Hypervisor/perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Critical])>0'
               name: 'Hyper-V host has critical VMs'
               priority: HIGH
               description: 'The number of VMs running in a critical state.'
@@ -289,7 +289,7 @@ zabbix_export:
               value: Hyper-V
           triggers:
             - uuid: 34533e67ef0a474685b617ed2d3e50b9
-              expression: 'last(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Ok])=0'
+              expression: 'last(/Template Windows HyperV Hypervisor/perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Ok])=0'
               name: 'Hyper-V host has 0 VMs in OK state'
               priority: WARNING
               description: 'Number of VMs in an OK state.'
@@ -335,7 +335,7 @@ zabbix_export:
               value: Hyper-V
           triggers:
             - uuid: a48770ee2a134936bc87d4e15282eb2a
-              expression: 'last(/Template Windows HyperV Host - test/service.info[vmms])<>0'
+              expression: 'last(/Template Windows HyperV Hypervisor/service.info[vmms])<>0'
               name: 'HyperV service state'
               priority: HIGH
         - uuid: 8b13e135261b4d49aeaaa8e1520b7be7
@@ -347,6 +347,16 @@ zabbix_export:
           tags:
             - tag: source
               value: Hyper-V
+        - uuid: 11436b70bc8e49f28de101dcbba74693
+          name: 'Last update inventory file'
+          key: 'vfs.file.time[C:\check_for_zabbix\hyperv_inventory.json, modify]'
+          triggers:
+            - uuid: 21bc35987d7d4537b4e7c69622b3f273
+              expression: '(now()-last(/Template Windows HyperV Hypervisor/vfs.file.time[C:\check_for_zabbix\hyperv_inventory.json, modify])) > 23400'
+              name: 'Update of file hyperv_inventory.json > 6 hours'
+              priority: AVERAGE
+              description: 'Need to verify Task Scheduler with script'
+              manual_close: 'YES'
       discovery_rules:
         - uuid: be719e8e65704f2ca9aefc27fc855c31
           name: 'Hyper-V VM Discovery'
@@ -374,6 +384,77 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: is_clustered
+                - tag: source
+                  value: Hyper-V
+            - uuid: 70ea8090455a408c9e2e1cc4c0cdea67
+              name: '{#VMNAME} replication_health'
+              type: DEPENDENT
+              key: 'replication_health[{#VMNAME}]'
+              delay: '0'
+              trends: '0'
+              status: DISABLED
+              discover: NO_DISCOVER
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.devices[0].VMs[?(@.vm_name=="{#VMNAME}")].replication_health'
+                - type: REGEX
+                  parameters:
+                    - '^\[(.*)\]$'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '^\"(.*)\"$'
+                    - \1
+              master_item:
+                key: 'vfs.file.contents[C:\check_for_zabbix\hyperv_inventory.json]'
+              tags:
+                - tag: hyperv_vm
+                  value: replication_health
+                - tag: source
+                  value: Hyper-V
+              trigger_prototypes:
+                - uuid: 657ae42a1a184a4697ef66f07b1f344c
+                  expression: 'find(/Template Windows HyperV Hypervisor/replication_health[{#VMNAME}],1s,"like","Critical")=1'
+                  name: 'Replication state {#VMNAME} critical'
+                  status: DISABLED
+                  discover: NO_DISCOVER
+                  priority: HIGH
+                  manual_close: 'YES'
+                - uuid: 2d1876d73915495d910314395fd08e9c
+                  expression: 'find(/Template Windows HyperV Hypervisor/replication_health[{#VMNAME}],1s,"like","Warning")=1'
+                  name: 'Replication state {#VMNAME} warning'
+                  status: DISABLED
+                  discover: NO_DISCOVER
+                  priority: WARNING
+                  manual_close: 'YES'
+            - uuid: 969c2f35cc304311971490998b78e806
+              name: '{#VMNAME} replication_state'
+              type: DEPENDENT
+              key: 'replication_state[{#VMNAME}]'
+              delay: '0'
+              trends: '0'
+              status: DISABLED
+              discover: NO_DISCOVER
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.devices[0].VMs[?(@.vm_name=="{#VMNAME}")].replication_state'
+                - type: REGEX
+                  parameters:
+                    - '^\[(.*)\]$'
+                    - \1
+                - type: REGEX
+                  parameters:
+                    - '^\"(.*)\"$'
+                    - \1
+              master_item:
+                key: 'vfs.file.contents[C:\check_for_zabbix\hyperv_inventory.json]'
+              tags:
+                - tag: hyperv_vm
+                  value: replication_state
                 - tag: source
                   value: Hyper-V
             - uuid: c6902e547a654cb7849aa97cde54a819
@@ -427,7 +508,7 @@ zabbix_export:
               type: DEPENDENT
               key: 'vm_memory[{#VMNAME}]'
               delay: '0'
-              units: GB
+              value_type: FLOAT
               preprocessing:
                 - type: JSONPATH
                   parameters:
@@ -469,13 +550,23 @@ zabbix_export:
                   value: state
                 - tag: source
                   value: Hyper-V
+              trigger_prototypes:
+                - uuid: 25aab5fd15a9436187ebf0b079425993
+                  expression: 'find(/Template Windows HyperV Hypervisor/vm_state[{#VMNAME}],1s,"like","Saved")=1'
+                  name: '{#VMNAME} in saved state'
+                  priority: HIGH
+                  manual_close: 'YES'
+                - uuid: 18389223f40542059fb982c21e254153
+                  expression: 'find(/Template Windows HyperV Hypervisor/vm_state[{#VMNAME}],1s,"like","Off")=1'
+                  name: '{#VMNAME} is Off'
+                  priority: INFO
+                  manual_close: 'YES'
             - uuid: e50535d62a774648bd838337b1615e22
               name: '{#VMNAME} vm_storage_total'
               type: DEPENDENT
               key: 'vm_storage_total[{#VMNAME}]'
               delay: '0'
               value_type: FLOAT
-              units: GB
               preprocessing:
                 - type: JSONPATH
                   parameters:
@@ -497,7 +588,6 @@ zabbix_export:
               key: 'vm_uptime[{#VMNAME}]'
               delay: '0'
               value_type: FLOAT
-              units: h
               preprocessing:
                 - type: JSONPATH
                   parameters:
@@ -538,7 +628,7 @@ zabbix_export:
           value: Hyper-V
   triggers:
     - uuid: 1d2f87014c90469c8bf169ddfe2d420d
-      expression: 'last(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Hypervisor\Virtual Processors])/last(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Hypervisor\Logical Processors])>5'
+      expression: 'last(/Template Windows HyperV Hypervisor/perf_counter_en[\Hyper-V Hypervisor\Virtual Processors])/last(/Template Windows HyperV Hypervisor/perf_counter_en[\Hyper-V Hypervisor\Logical Processors])>5'
       name: 'Hyper-V Virtual to Logical CPU Ratio > 5:1'
       priority: WARNING
   graphs:
@@ -550,25 +640,25 @@ zabbix_export:
         - drawtype: BOLD_LINE
           color: 0000EE
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor\Logical Processors]'
         - sortorder: '1'
           drawtype: BOLD_LINE
           color: 33FFFF
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor\Virtual Processors]'
         - sortorder: '2'
           drawtype: BOLD_LINE
           color: DD0000
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor\Partitions]'
         - sortorder: '3'
           drawtype: BOLD_LINE
           color: 00CC00
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor\Monitored Notifications]'
     - uuid: 3d35591609ee4678a284785003570b1b
       name: 'HyperV CPU Total'
@@ -579,12 +669,12 @@ zabbix_export:
       graph_items:
         - color: 00CC00
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor Logical Processor(_Total)\% Guest Run Time]'
         - sortorder: '1'
           color: DD0000
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor Logical Processor(_Total)\% Hypervisor Run Time]'
     - uuid: 29f351ec14b843d2808e5901f7b55443
       name: 'HyperV Network'
@@ -593,13 +683,13 @@ zabbix_export:
         - drawtype: GRADIENT_LINE
           color: 3333FF
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Virtual Switch(*)\Bytes Received/sec]'
         - sortorder: '1'
           drawtype: GRADIENT_LINE
           color: 00DD00
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Virtual Switch(*)\Bytes Sent/sec]'
     - uuid: 33c1ffdcdf384291b4f3796d64dae563
       name: 'HyperV Total Pages'
@@ -609,7 +699,7 @@ zabbix_export:
         - drawtype: GRADIENT_LINE
           color: C80000
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Hypervisor\Total Pages]'
     - uuid: 9f939b4398c2489bb9441212aa1bf33e
       name: 'HyperV VM Status'
@@ -619,11 +709,11 @@ zabbix_export:
         - drawtype: BOLD_LINE
           color: C80000
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Critical]'
         - sortorder: '1'
           drawtype: BOLD_LINE
           color: 00C800
           item:
-            host: 'Template Windows HyperV Host - test'
+            host: 'Template Windows HyperV Hypervisor'
             key: 'perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Ok]'
