@@ -84,6 +84,8 @@ zabbix_export:
           units: '%'
           description: 'The percentage of time spent by the processor in guest code.'
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: 5f67648e20a0432599c0f6a127f2f867
@@ -93,16 +95,19 @@ zabbix_export:
           units: '%'
           description: 'The percentage of time spent by the processor in hypervisor code.'
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: 00e110d9228646e182d8111c6d424c63
           name: 'HyperV Logical CPU Idle Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Logical Processor(_Total)\% Idle Time]'
           value_type: FLOAT
           units: '%'
           description: 'The percentage of time spent by the processor in an idle state.'
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
           triggers:
@@ -112,18 +117,18 @@ zabbix_export:
               priority: WARNING
         - uuid: 3bc784b044c049738b602c4e926272a4
           name: 'HyperV Root Virtual CPU Guest Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Root Virtual Processor(_Total)\% Guest Run Time]'
           history: 2w
           value_type: FLOAT
           units: '%'
           description: 'The percentage of time spent by the virtual processor in guest code.'
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: 4568aac652184622b860e06b0c55b2bf
           name: 'HyperV Root Virtual CPU Hypervisor Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Root Virtual Processor(_Total)\% Hypervisor Run Time]'
           history: 30d
           value_type: FLOAT
@@ -132,9 +137,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 5b152a152c8d48d59637c2795a0ccfb9
           name: 'HyperV Root Virtual CPU Remote Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Root Virtual Processor(_Total)\% Remote Run Time]'
           history: 30d
           value_type: FLOAT
@@ -143,9 +149,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 1533ccb4cc8a4f6c8b0727f41ba85b25
           name: 'HyperV Root Virtual CPU Total Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Root Virtual Processor(_Total)\% Total Run Time]'
           history: 30d
           value_type: FLOAT
@@ -154,9 +161,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 89c4aeadbc09410aba751f63ae9f438b
           name: 'HyperV Virtual CPU Guest Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Virtual Processor(_Total)\% Guest Run Time]'
           history: 30d
           value_type: FLOAT
@@ -165,9 +173,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 3bf4bd4ee7604df38524d3d2c11beebb
           name: 'HyperV Virtual CPU Hypervisor Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Virtual Processor(_Total)\% Hypervisor Run Time]'
           history: 30d
           value_type: FLOAT
@@ -176,9 +185,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 6a1616044c1d49d786808f7d4670f65b
           name: 'HyperV Virtual CPU Remote Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Virtual Processor(_Total)\% Remote Run Time]'
           history: 30d
           value_type: FLOAT
@@ -187,9 +197,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 6e87c3c99e2b4f09ad684829ed0aa119
           name: 'HyperV Virtual CPU Total Runtime %'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor Virtual Processor(_Total)\% Total Run Time]'
           history: 30d
           value_type: FLOAT
@@ -198,59 +209,68 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 86b0474c6cda459482ded076c5fc8294
           name: 'HyperV Number of Logical CPUs'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor\Logical Processors]'
           delay: 5m
           history: 2w
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: 46f17da4003c4bc49cda5c4a26bb670b
           name: 'HyperV Monitored Notifications'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor\Monitored Notifications]'
           delay: 5m
           history: 2w
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: cef39f8ea07b4e49931a522ff8612caa
           name: 'HyperV Number of Partitions (VMs)'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor\Partitions]'
           delay: 5m
           history: 2w
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: d1be59cf028448e1a9a8764093c2d3c4
           name: 'HyperV Total Pages'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Hypervisor\Total Pages]'
           delay: 5m
           history: 2w
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: bf3c2bae19eb4596b70f28f92a2e2072
           name: 'HyperV Number of Virtual CPUs'
           key: 'perf_counter_en[\Hyper-V Hypervisor\Virtual Processors]'
           delay: 5m
           history: 2w
           tags:
+            - tag: Application
+              value: 'HyperV Host'
             - tag: source
               value: Hyper-V
         - uuid: 5976cd052de64dffa0be5e2c6ae06f8b
           name: 'HyperV VMs Critical'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Critical]'
           history: 30d
           description: 'The number of critical VMs on a host.'
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
           triggers:
             - uuid: fcc56d27b98b46d08a7b08252bbadc48
               expression: 'last(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Critical])>0'
@@ -259,13 +279,14 @@ zabbix_export:
               description: 'The number of VMs running in a critical state.'
         - uuid: 9dd878dab86a4a7f8397af8c22dbf37a
           name: 'HyperV VMs OK'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Ok]'
           history: 30d
           description: 'The number of OK VM''s on a host.'
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
           triggers:
             - uuid: 34533e67ef0a474685b617ed2d3e50b9
               expression: 'last(/Template Windows HyperV Host - test/perf_counter_en[\Hyper-V Virtual Machine Health Summary\Health Ok])=0'
@@ -274,7 +295,6 @@ zabbix_export:
               description: 'Number of VMs in an OK state.'
         - uuid: 28b82b1c6ef1484b852c85e115097c05
           name: 'HyperV Virtual Switch B/s Received'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Virtual Switch(*)\Bytes Received/sec]'
           history: 30d
           value_type: FLOAT
@@ -286,9 +306,10 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: ace69c1fe9a243d29e85b55d82857540
           name: 'HyperV Virtual Switch B/s Sent'
-          type: ZABBIX_ACTIVE
           key: 'perf_counter_en[\Hyper-V Virtual Switch(*)\Bytes Sent/sec]'
           history: 30d
           value_type: FLOAT
@@ -300,15 +321,18 @@ zabbix_export:
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
         - uuid: 849a70547f9446049d2a3e016492b125
           name: 'HyperV Service State'
-          type: ZABBIX_ACTIVE
           key: 'service.info[vmms]'
           delay: 5m
           history: 30d
           tags:
             - tag: Application
               value: 'HyperV Host'
+            - tag: source
+              value: Hyper-V
           triggers:
             - uuid: a48770ee2a134936bc87d4e15282eb2a
               expression: 'last(/Template Windows HyperV Host - test/service.info[vmms])<>0'
@@ -350,6 +374,8 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: is_clustered
+                - tag: source
+                  value: Hyper-V
             - uuid: c6902e547a654cb7849aa97cde54a819
               name: '{#VMNAME} vm_cpu'
               type: DEPENDENT
@@ -368,6 +394,8 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: cpu
+                - tag: source
+                  value: Hyper-V
             - uuid: d91fba28f66b43759cb58f0b3b52dd32
               name: '{#VMNAME} vm_IPs'
               type: DEPENDENT
@@ -392,6 +420,8 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: IPs
+                - tag: source
+                  value: Hyper-V
             - uuid: aa9e23ea59fa4b6cb0d72c008a94265a
               name: '{#VMNAME} vm_memory'
               type: DEPENDENT
@@ -411,6 +441,8 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: memory
+                - tag: source
+                  value: Hyper-V
             - uuid: abe39a2cc6dc45c9b0916d3d13347f08
               name: '{#VMNAME} vm_state'
               type: DEPENDENT
@@ -435,6 +467,8 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: state
+                - tag: source
+                  value: Hyper-V
             - uuid: e50535d62a774648bd838337b1615e22
               name: '{#VMNAME} vm_storage_total'
               type: DEPENDENT
@@ -455,6 +489,8 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: storage_total
+                - tag: source
+                  value: Hyper-V
             - uuid: 392843fda9e84a149ee9b1c0e22d7b64
               name: '{#VMNAME} VMUptime'
               type: DEPENDENT
@@ -475,10 +511,14 @@ zabbix_export:
               tags:
                 - tag: hyperv_vm
                   value: uptime
+                - tag: source
+                  value: Hyper-V
           host_prototypes:
             - uuid: c5e6ee4c7f9b4c3dbb5d16213c10079a
               host: '{#VMNAME}_{#NODENAME}'
               name: '{#VMNAME}_{#NODENAME}'
+              status: DISABLED
+              discover: NO_DISCOVER
               group_links:
                 - group:
                     name: 'HyperV VM'
